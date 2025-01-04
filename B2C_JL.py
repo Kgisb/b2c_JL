@@ -46,22 +46,22 @@ def calculate_price_control_incentive(full_payment_cash_in, mrp, deal_source):
         return 0
 
 # Streamlit App
-st.title("Jan Incentive Calculator")
+st.markdown("<h1 style='text-align: center; color: darkblue;'>Jan Incentive Calculator</h1>", unsafe_allow_html=True)
 
 # Upfront Cash-in Incentive Section
-st.subheader("Upfront Cash-in Incentive")
+st.markdown("<h2 style='color: darkgreen;'>Upfront Cash-in Incentive</h2>", unsafe_allow_html=True)
 total_upfront_cash_in = st.number_input("Total Upfront Cash-in (€):", min_value=0.0, step=0.01)
 upfront_incentive = calculate_cash_in_incentive(total_upfront_cash_in)
-st.write(f"**Upfront Cash-in Incentive: INR {upfront_incentive:,.2f}**")
+st.markdown(f"<p style='background-color: lightyellow; color: black; padding: 10px; border-radius: 5px;'>Upfront Cash-in Incentive: <strong>INR {upfront_incentive:,.2f}</strong></p>", unsafe_allow_html=True)
 
 # Manage dynamic full payment cases
-st.subheader("Dynamic Full Payment Cases")
+st.markdown("<h2 style='color: darkorange;'>Dynamic Full Payment Cases</h2>", unsafe_allow_html=True)
 
 if "full_payment_cases" not in st.session_state:
     st.session_state.full_payment_cases = []
 
 # Add a new full payment case
-if st.button("Add Full Payment Case"):
+if st.button("Add Full Payment Case", key="add_case"):
     st.session_state.full_payment_cases.append({
         "full_payment_cash_in": 0.0,
         "mrp": 119,
@@ -74,7 +74,7 @@ total_price_control_incentive = 0
 cases_to_remove = []
 
 for i, case in enumerate(st.session_state.full_payment_cases):
-    st.markdown(f"**Case {i + 1}**")
+    st.markdown(f"<h4 style='color: darkblue;'>Case {i + 1}</h4>", unsafe_allow_html=True)
     cols = st.columns([2, 2, 2, 1])
     
     case["full_payment_cash_in"] = cols[0].number_input(
@@ -104,7 +104,7 @@ for i, case in enumerate(st.session_state.full_payment_cases):
     case["incentive"] = calculate_price_control_incentive(
         case["full_payment_cash_in"], case["mrp"], case["deal_source"]
     )
-    st.write(f"Price Control Incentive for Case {i + 1}: INR {case['incentive']:,.2f}")
+    st.markdown(f"<p style='color: darkgreen;'>Price Control Incentive for Case {i + 1}: <strong>INR {case['incentive']:,.2f}</strong></p>", unsafe_allow_html=True)
     total_price_control_incentive += case["incentive"]
 
 # Remove deleted cases
@@ -112,14 +112,14 @@ for index in sorted(cases_to_remove, reverse=True):
     st.session_state.full_payment_cases.pop(index)
 
 # Additional Incentives Section
-st.subheader("Additional Incentives")
+st.markdown("<h2 style='color: darkviolet;'>Additional Incentives</h2>", unsafe_allow_html=True)
 d0_cases = st.number_input("D0 Conversion Cases >= €400:", min_value=0, step=1)
 within_window_cases = st.number_input("Converted within Window Cases:", min_value=0, step=1)
 self_gen_cases = st.number_input("Self Gen Referral Cases:", min_value=0, step=1)
 additional_incentive = (d0_cases * 300) + (within_window_cases * 4000) + (self_gen_cases * 3000)
-st.write(f"**Additional Incentives: INR {additional_incentive:,.2f}**")
+st.markdown(f"<p style='background-color: lightblue; color: black; padding: 10px; border-radius: 5px;'>Additional Incentives: <strong>INR {additional_incentive:,.2f}</strong></p>", unsafe_allow_html=True)
 
 # Final Incentive Calculation
-st.subheader("Final Incentive")
+st.markdown("<h2 style='color: darkred;'>Final Incentive</h2>", unsafe_allow_html=True)
 total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
-st.markdown(f"<h1 style='text-align: center; color: green;'>Overall Total Incentive: INR {total_incentive:,.2f}</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; background-color: lightgreen; color: black; padding: 15px; border-radius: 10px;'>Overall Total Incentive: INR {total_incentive:,.2f}</h1>", unsafe_allow_html=True)

@@ -51,9 +51,8 @@ st.title("Dynamic Incentive Calculator")
 # Upfront Cash-in Incentive Section
 st.subheader("Upfront Cash-in Incentive")
 total_upfront_cash_in = st.number_input("Total Upfront Cash-in (€):", min_value=0.0, step=0.01)
-if st.button("Calculate Upfront Incentive"):
-    upfront_incentive = calculate_cash_in_incentive(total_upfront_cash_in)
-    st.success(f"Upfront Cash-in Incentive: INR {upfront_incentive:,.2f}")
+upfront_incentive = calculate_cash_in_incentive(total_upfront_cash_in)
+st.write(f"**Upfront Cash-in Incentive: INR {upfront_incentive:,.2f}**")
 
 # Manage dynamic full payment cases
 st.subheader("Dynamic Full Payment Cases")
@@ -82,16 +81,19 @@ for i, case in enumerate(st.session_state.full_payment_cases):
         f"Full Payment Cash-in (€) - Case {i + 1}", 
         min_value=0.0, 
         step=0.01, 
+        value=case["full_payment_cash_in"], 
         key=f"full_payment_cash_in_{i}"
     )
     case["mrp"] = cols[1].selectbox(
         f"MRP (€) - Case {i + 1}", 
         options=[119, 349, 649, 1199, 1999], 
+        index=[119, 349, 649, 1199, 1999].index(case["mrp"]), 
         key=f"mrp_{i}"
     )
     case["deal_source"] = cols[2].selectbox(
         f"Deal Source - Case {i + 1}", 
         options=["PM-Search", "PM-Social", "Organic", "Others", "Referral", "Events", "Goldmine", "DP"], 
+        index=["PM-Search", "PM-Social", "Organic", "Others", "Referral", "Events", "Goldmine", "DP"].index(case["deal_source"]), 
         key=f"deal_source_{i}"
     )
     
@@ -102,29 +104,25 @@ for i, case in enumerate(st.session_state.full_payment_cases):
     case["incentive"] = calculate_price_control_incentive(
         case["full_payment_cash_in"], case["mrp"], case["deal_source"]
     )
+    st.write(f"Price Control Incentive for Case {i + 1}: INR {case['incentive']:,.2f}")
     total_price_control_incentive += case["incentive"]
-    st.write(f"Price Control Incentive: INR {case['incentive']:,.2f}")
 
 # Remove deleted cases
 for index in sorted(cases_to_remove, reverse=True):
     st.session_state.full_payment_cases.pop(index)
 
 # Display total price control incentive
-st.markdown(f"### Total Price Control Incentive: INR {total_price_control_incentive:,.2f}")
+st.markdown(f"### **Total Price Control Incentive: INR {total_price_control_incentive:,.2f}**")
 
 # Additional Incentives Section
 st.subheader("Additional Incentives")
 d0_cases = st.number_input("D0 Conversion Cases >= €400:", min_value=0, step=1)
 within_window_cases = st.number_input("Converted within Window Cases:", min_value=0, step=1)
 self_gen_cases = st.number_input("Self Gen Referral Cases:", min_value=0, step=1)
-if st.button("Calculate Additional Incentives"):
-    additional_incentive = (d0_cases * 300) + (within_window_cases * 4000) + (self_gen_cases * 3000)
-    st.success(f"Additional Incentives: INR {additional_incentive:,.2f}")
+additional_incentive = (d0_cases * 300) + (within_window_cases * 4000) + (self_gen_cases * 3000)
+st.write(f"**Additional Incentives: INR {additional_incentive:,.2f}**")
 
 # Final Incentive Calculation
 st.subheader("Final Incentive")
-if st.button("Calculate Total Incentive"):
-    upfront_incentive = calculate_cash_in_incentive(total_upfront_cash_in)
-    additional_incentive = (d0_cases * 300) + (within_window_cases * 4000) + (self_gen_cases * 3000)
-    total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
-    st.success(f"Overall Total Incentive: INR {total_incentive:,.2f}")
+total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
+st.markdown(f"<h1 style='text-align: center; color: green;'>Overall Total Incentive: INR {total_incentive:,.2f}</h1>", unsafe_allow_html=True)

@@ -50,7 +50,7 @@ st.markdown("<h1 style='text-align: center; color: darkblue;'>Jan Incentive Calc
 
 # Upfront Cash-in Incentive Section
 st.markdown("<h2 style='color: darkgreen;'>Upfront Cash-in Incentive</h2>", unsafe_allow_html=True)
-total_upfront_cash_in = st.number_input("Total Upfront Cash-in (€):", min_value=0, step=1)
+total_upfront_cash_in = st.number_input("Total Upfront Cash-in (€):", min_value=0, step=1, format="%d")
 upfront_incentive = calculate_cash_in_incentive(total_upfront_cash_in)
 st.markdown(f"<p style='background-color: lightyellow; color: black; padding: 10px; border-radius: 5px;'>Upfront Cash-in Incentive: <strong>INR {upfront_incentive:,}</strong></p>", unsafe_allow_html=True)
 
@@ -82,6 +82,7 @@ for i, case in enumerate(st.session_state.full_payment_cases):
         min_value=0, 
         step=1, 
         value=case["full_payment_cash_in"], 
+        format="%d", 
         key=f"full_payment_cash_in_{i}"
     )
     case["mrp"] = cols[1].selectbox(
@@ -113,9 +114,9 @@ for index in sorted(cases_to_remove, reverse=True):
 
 # Additional Incentives Section
 st.markdown("<h2 style='color: darkviolet;'>Additional Incentives</h2>", unsafe_allow_html=True)
-d0_cases = st.number_input("D0 Conversion Cases >= €400:", min_value=0, step=1)
-within_window_cases = st.number_input("Converted within Window Cases:", min_value=0, step=1)
-self_gen_cases = st.number_input("Self Gen Referral Cases:", min_value=0, step=1)
+d0_cases = st.number_input("D0 Conversion Cases >= €400:", min_value=0, step=1, format="%d")
+within_window_cases = st.number_input("Converted within Window Cases:", min_value=0, step=1, format="%d")
+self_gen_cases = st.number_input("Self Gen Referral Cases:", min_value=0, step=1, format="%d")
 additional_incentive = (d0_cases * 300) + (within_window_cases * 4000) + (self_gen_cases * 3000)
 st.markdown(f"<p style='background-color: lightblue; color: black; padding: 10px; border-radius: 5px;'>Additional Incentives: <strong>INR {additional_incentive:,}</strong></p>", unsafe_allow_html=True)
 

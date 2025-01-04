@@ -1,7 +1,4 @@
 import streamlit as st
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
 
 # Functions to calculate incentives
 def calculate_cash_in_incentive(total_upfront_cash_in):
@@ -47,26 +44,6 @@ def calculate_price_control_incentive(full_payment_cash_in, mrp, deal_source):
             return 0
     else:
         return 0
-
-# Google Sheets Authentication
-def authenticate_google_sheets():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-    client = gspread.authorize(credentials)
-    return client
-
-# Save data to Google Sheets
-def save_to_google_sheet(sheet_name, data):
-    client = authenticate_google_sheets()
-    try:
-        sheet = client.open(sheet_name).sheet1
-    except gspread.SpreadsheetNotFound:
-        st.error("Google Sheet not found. Ensure the sheet name is correct and shared with the service account.")
-        return False
-
-    # Append data to the sheet
-    sheet.append_row(data)
-    return True
 
 # Streamlit App
 st.markdown("<h1 style='text-align: center; color: darkblue;'>Jan Incentive Calculator</h1>", unsafe_allow_html=True)
@@ -146,17 +123,3 @@ st.markdown(f"<p style='background-color: lightblue; color: black; padding: 10px
 st.markdown("<h2 style='color: darkred;'>Final Incentive</h2>", unsafe_allow_html=True)
 total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
 st.markdown(f"<h1 style='text-align: center; background-color: lightgreen; color: black; padding: 15px; border-radius: 10px;'>Overall Total Incentive: INR {total_incentive:,.2f}</h1>", unsafe_allow_html=True)
-
-# Save data to Google Sheets
-if st.button("Save to Google Sheet"):
-    data_to_save = [
-        total_upfront_cash_in,
-        upfront_incentive,
-        total_price_control_incentive,
-        additional_incentive,
-        total_incentive,
-    ]
-    if save_to_google_sheet("Incentive Calculator Data", data_to_save):
-        st.success("Data saved successfully to Google Sheets!")
-    else:
-        st.error("Failed to save data to Google Sheets.")

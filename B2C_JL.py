@@ -133,5 +133,15 @@ st.markdown(f"<p style='background-color: lightblue; color: black; padding: 10px
 
 # Final Incentive Calculation
 st.markdown("<h2 style='color: darkred;'>Final Incentive</h2>", unsafe_allow_html=True)
-total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
+
+# Check if trial scheduled today is less than 2
+if trial_scheduled_today < 2:
+    total_incentive = 0
+    st.markdown(
+        "<p style='color: red; text-align: center; font-weight: bold;'>Final incentive is set to zero because trial scheduled today is less than 2.</p>",
+        unsafe_allow_html=True
+    )
+else:
+    total_incentive = upfront_incentive + total_price_control_incentive + additional_incentive
+
 st.markdown(f"<h1 style='text-align: center; background-color: lightgreen; color: black; padding: 15px; border-radius: 10px;'>Overall Total Incentive: INR {total_incentive:,}</h1>", unsafe_allow_html=True)

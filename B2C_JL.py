@@ -118,7 +118,7 @@ d0_cases = st.number_input("D0 Conversion Cases >= €400:", min_value=0, step=1
 within_window_cases = st.number_input("Converted within Window Cases: >=400 cash-in case", min_value=0, step=1, format="%d")
 self_gen_cases = st.number_input("Self Gen Referral Cases: >=400 cash-in case", min_value=0, step=1, format="%d")
 trial_scheduled_today = st.number_input("TS Today (if Done within 3 days, if > 4, INR 1000 per trial):", min_value=0, step=1, format="%d")
-trial_done = st.number_input("TD (if > 4, INR 2000 per trial):", min_value=0, step=1, format="%d")
+trial_done = st.number_input("TD Today (if > 4, INR 2000 per trial):", min_value=0, step=1, format="%d")
 
 # Calculate additional incentives
 additional_incentive = (
